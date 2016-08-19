@@ -4,7 +4,8 @@
 
 其中有些实现非常绕，理解起来也很烧脑，一不小心就可能搞错。为了以后能够快速查阅，犯糊涂的时候少花时间去重新理解，将笔记更加系统地整理出来。
 
-[对象与object](book/object-and-object.md)
+- [JavaScript简史](book/javascript-history.md)
+- [对象与object](book/object-and-object.md)
 
 
 
