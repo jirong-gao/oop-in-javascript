@@ -141,9 +141,9 @@ rectangle是一个具有两个属性的object，分别为width和height（英文
 
 4. 面向对象编程中的核心概念-“对象”，是借助于object类型实现的；属性值为函数的属性，可以称之为方法
 
-等会儿，在上面维基百科对object的解释中，提到基于类的面向对象编程模式（class-based object-oriented programming paradigm）。难道面向对象的编程方式还有多种，都是先设计类，再基于类的创建对象实例的嘛？
+等会儿，在上面维基百科对object的解释中，提到基于类的面向对象编程方式（class-based object-oriented programming paradigm）。难道面向对象的编程方式还有多种？不都是先设计类，再基于类的创建对象实例的嘛？
 
-是的，除了基于类的面向对象编程模式，还有一种叫作基于原型的面向对象编程模式（prototype-based object-oriented programming paradigm）。而JavaScript就采用了这种模式。
+是的，除了基于类的面向对象编程模式，还有一种叫作基于原型的面向对象编程方式（prototype-based object-oriented programming paradigm）。而JavaScript就采用了这种模式。
 
 我说嘛，JavaScript里面的OO理解起来总是有点磕磕绊绊的。原来除了上面的对象与object的微妙差别以外，还有[这么一出](class-prototype-oop.md)。
 
