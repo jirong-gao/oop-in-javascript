@@ -6,6 +6,10 @@
 
 - [JavaScript简史](book/javascript-history.md)
 - [对象与object](book/object-and-object.md)
+- [JavaScript的面向对象编程实现方式](book/class-prototype-oop.md)
+- [对象的创建](books/how-to-create-objects.md)
+- [JavaScript中的原型实现](books/prototype-in-javascript.md)
+- [构造函数](books/constructor.md)
 
 
 
