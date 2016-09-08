@@ -142,7 +142,7 @@
 
 	// 我们来看看这时的objPoint变成什么样了
 	
-	console.log(objPoint); // { x: 1, y: 2, __proto__: {}}
+	console.log(objPoint); // { x: 1, y: 2, __proto__: {} }
 	
 为什么，上面的objPoint对象里面出现了一个\_\_proto\_\_属性了呢？为什么通过改变\_\_proto\_\_的值，无法改变原型对象了呢？
 
@@ -174,21 +174,108 @@
 
 在JavaScript中，如果没有特别地更改一个对象的原型对象，一般情况下对象都是直接或者间接地继承了Object.prototype对象，所以都可以使用这个\_\_proto\_\_属性。
 
-如果都是访问Object.prototype的\_\_proto\_\_属性，那它就应该返回的是Object.protototype对象的原型对象呀。而且前面讲过，Object.prototype并没有原型对象。
+如果都是访问Object.prototype的\_\_proto\_\_属性，那它就应该返回的是Object.protototype对象的原型对象呀？而且前面讲过，Object.prototype并没有原型对象。
 
 这就是上面的第二条，\_\_proto\_\_是一种叫作访问属性（accessor property）的属性。
+
+### 访问属性 （accessor property）
 
 这里就引入了一个新的话题，在JavaScript中，对象的属性实际上有两种：
 
 1. 第一种叫作数据属性（data property），这就是我们常见的属性，属性的值是某种数据类型；
 2. 第二种叫作访问属性（accessor property），它的值被替换为一个或两个方法：getter和setter。
 
-当访问一个访问属性时，getter方法将会被调用，这个调用不需要添加小括号也没有参数传入，该getter方法返回的值就成为访问该属性的值。
+当访问一个访问属性时，getter方法将会被调用（没有传入参数），该getter方法返回的值就成为访问该属性的值。
+
 当给一个访问属性赋值时，setter方法将会被调用。
 
 如果一个访问属性只有getter方法，可以说这是一个只读的属性；如果具有getter和setter两个方法，那么可以说这是一个可读可写的属性。
 
-定义访问属性最简单的方法就是使用源文本方式，比如：
+在对象中，定义一个访问属性最简单的方法就是使用源文本方式，语法如下：
+
+	var o = {
+		// 普通的数据属性
+		dataProperty: value,
+
+		// 可读写的访问属性，有getter和setter
+		get accessorProperty() { /* function body here */ },
+		set accessorProperty(value) { /* function body here */ }
+	};
+
+一个简单的例子：
+
+	// 创建一个带有访问属性的对象
+	var obj = {
+		// 两个普通的数据属性
+		x: 1,
+		y: 2,
+
+		// 一个只读的访问属性，返回属性x与属性y的乘积
+		get a1() { return (this.x * this.y); },
+
+		// 一个可读写的访问属性，返回属性x与属性y的和
+		get a2() { return (this.x + this.y); },
+		set a2(point) {
+			this.x = point.x;
+			this.y = point.y;
+		}
+	};
+
+	// 使用这些访问属性
+	console.log(obj.a1);  // 2
+
+	console.log(obj.a2);  // 3
+
+	obj.a2 = { x: 5, y: 11 };  // 使用setter方法修改obj的两个属性x和y
+
+	console.(obj); // { x: 5, y: 11, a1: [Getter], a2: [Getter/Setter] }
+
+	console.log(obj.a1);  // 55
+	
+
+为了简单起见，上面访问属性a2的setter方法中并没有对输入参数作检验，这里只是为了演示setter的用法。随便提一下，setter方法仅允许有一个参数。
+
+在我们前面的例子中，当我们想把没有原型对象的objPoint，尝试通过修改\_\_proto\_\_属性重新建立和Object.prototype的链接时，却发现\_\_proto\_\_成了objPoint对象的一个普通属性。我们下面通过代码解释这是为什么：
+
+	// 新创建的objPoint对象是继承于Object.prototype
+	// 下面将__proto__赋值为null，实际上是调用了__proto__的setter方法
+	// 该方法将objPoint对象的内部状态位[[prototype]]设置为null，由此objPoint就没有原型对象了
+	objPoint.__proto__ = null;
+
+	// objPoint不从Object.prototype继承属性，当然也就是没有了__proto__属性，所以是undefined
+	objPoint.__proto__ === undefnined;
+
+	// 这个赋值操作实际上是在objPoint对象上新创建了一个普通的数据属性，名为__proto__
+	// 这并没有改变objPoint的内部状态位[[prototype]]，也就没有改变其原型对象
+	objPoint.__proto___ = Object.prototype;
+
+	// 所以，你将会在objPoint中看到__proto__这个属性，它仅仅只是一个普通属性而已，与x、y没什么区别
+	console.log(objPoint); // { x: 1, y: 2, __proto__: {} }
+
+	// 而且，objPoint的原型对象仍然为null，即没有
+	Object.getPrototypeOf(objPoint) === null;
 
 
+### \_\_proto\_\_小结
 
+1. \_\_proto\_\_是Object.prototype对象中的一个访问属性
+
+2. 可以通过\_\_proto\_\_属性来获取或者改变对象的原型对象，前提是必须直接或间接地继承于Object.prototype对象
+
+3. 对\_\_proto\_\_的访问会带来原型链的搜索，有时可能会导致严重的性能问题，所以不建议使用这个属性
+
+4. 在需要访问对象的原型对象时，建议使用Object.getPrototypeOf()方法，该方法会直接返回内部状态位[[prototype]]，没有性能上的隐患
+
+5. 使用\_\_proto\_\_存在兼容性上的隐患，即便是在ES 6规范中，也只定义了网络浏览器的JavaScript引擎要支持这个属性
+
+6. 尽量不要动态去修改一个对象的原型对象，这是一个非常慢的操作，可能会带来性能上的问题；尽量在创建对象时，使用Object.create()方法指定对象的原型对象
+
+7. 在最近的ES 6草案中引入了Object.setPrototypeOf()方法，其目的也是为了避免使用\_\_proto\_\_属性
+
+8. ESLint检测：[no-proto规则](http://eslint.org/docs/rules/no-proto)
+
+## 原型小结
+
+JavaScript采用了基于原型的面向对象编程方式，但是其对原型的支持是在JavaScript引擎内部，通过内部状态位[[prototype]]和相关的内部方法来实现的。而呈现给JavaScript编程人员的，却是一个object类型（键值对），还有我们即将看到的“伪类模式”的[构造函数](constructor.md)。
+
+通过对原型在JavaScript中实现的深入理解，将会帮助我们在编写面向对象的JavaScript程序时保持清晰的头脑。
