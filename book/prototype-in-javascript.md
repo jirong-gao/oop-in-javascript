@@ -1,6 +1,6 @@
 # JavaScript中的原型实现
 
-假设你对基于原型的面向对象编程方式有了一定的了解（如果没有，请参看[《JavaScript的面向对象编程实现方式》](class-prototype-oopp.md)），也知道了继承就是通过原型来实现的。
+假设你对基于原型的面向对象编程方式有了一定的了解（如果没有，请参看[《JavaScript的面向对象编程实现方式》](class-prototype-oop.md)），也知道了继承就是通过原型来实现的。
 
 那么具体在JavaScript语言中，这是如何实现的呢？
 
