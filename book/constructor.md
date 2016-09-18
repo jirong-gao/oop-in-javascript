@@ -54,5 +54,28 @@
 3. 执行原有的函数代码
 4. 返回this所指向的对象
 
+正如在[《JavaScript的面向对象编程实现方式》](class-prototype-oop.md)一章中提到的，构造函数应该被理解为一个制造对象的加工工厂，为要创建的对象准备了一个原型对象（即prototype属性的值）。
+
+注意，这个prototype属性是任意一个函数都默认具有的属性，它是在函数被用作构造函数时才会被用到的。这个prototype属性并不是构造函数本身的原型对象，而是要新创建的对象的原型对象。
+
+## 继承关系
+
+这有一点绕，让我们用一个图来表示这里的继承关系：
+
+![](full-inheritance.png)
+
+从图中我们可以看到：
+
+- 从继承关系上看，rect与Rectangle并没有任何关系；原型链为： rect -> Rectangle.prototype -> Object.prototype
+
+- prototype是构造函数对象中的一个属性；prototype属性所指向的对象，就是所有被此构造函数所创建的对象的原型对象
+
+- Object.prototype对象没有原型对象，一般来说它就是原型链的终点
+
+- Function对象的原型对象都是Function.prototype，这有一点特殊。这是因为：
+	-	Function对象也是一个构造函数，其目的是创建其它的函数对象，并为它们提供了一个原型对象Function.prototype
+	-	Function对象本身也是一个函数对象，所以它本身应该继承于Function.prototype对象
+
+- Function.prototype对象是所有函数对象的原型对象，它本身的原型对象是Object.prototype
 
 
