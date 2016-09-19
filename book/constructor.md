@@ -68,7 +68,10 @@
 
 - 从继承关系上看，rect与Rectangle并没有任何关系；原型链为： rect -> Rectangle.prototype -> Object.prototype
 
-- prototype是构造函数对象中的一个属性；prototype属性所指向的对象，就是所有被此构造函数所创建的对象的原型对象
+- 图中有三个构造函数：Rectangle、Function、Object
+	- prototype是构造函数对象中的一个属性；prototype属性所指向的对象，就是所有被此构造函数所创建的对象的原型对象
+	- 三个构造函数的原型对象都是Function.prototype
+	- 最容易混淆的是Object对象，常常将其误理解为所有对象的“基类”或者祖先，实际上它只是一个用来创建新对象的构造函数
 
 - Object.prototype对象没有原型对象，一般来说它就是原型链的终点
 
@@ -78,4 +81,25 @@
 
 - Function.prototype对象是所有函数对象的原型对象，它本身的原型对象是Object.prototype
 
+让我们看一下Function.prototype对象具有的属性：
 
+	> Object.getOwnPropertyNames(Function.prototype);
+	[ 'length',
+	  'name',
+	  'arguments',
+	  'caller',
+	  'apply',
+	  'bind',
+	  'call',
+	  'toString',
+	  'constructor' ]
+
+这里有我们熟悉的arguments、apply、call等属性，这些属性就是函数所具有的属性。
+
+## 函数的调用
+
+讲到这里，我们来到了函数的原型对象Function.prototype。在JavaScript代码中，当我们调用一个函数时，可以理解为下面的调用：
+
+	Function.prototype.call (thisArg [ , arg1 [ , arg2, … ] ] )
+
+第一个参数就是this，后面的是参数列表。this就是一个名叫this的变量，仅此而已。由于JavaScript的作用域是在函数体中，在各函数中的this具体是什么值，需要根据不同的函数调用方式在运行时才能确定。这就是我们接下来要在[《this解密》](the-secret-of-this.md)所讲的内容。
