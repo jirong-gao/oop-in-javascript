@@ -11,6 +11,9 @@ JavaScript语言上手非常容易，本身也不需要什么庞大复杂的开�
 - [对象的创建](book/how-to-create-objects.md)
 - [JavaScript中的原型实现](book/prototype-in-javascript.md)
 - [构造函数](book/constructor.md)
+- [this解密](book/the-secret-of-this.md)
+
+
 
 
 
