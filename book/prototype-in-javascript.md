@@ -26,11 +26,13 @@
 
 我们可以使用一个图来表示对象的内存映象和继承关系，图中对象名称的上方是对象的属性（对JavaScript编程人员可见），而对象名称的下方是内部状态位（对JavaScript编程人员不可见），内部状态位[[prototype]]指向原型对象。比如下面这个对象：
 
-	// 使用源文本方式创建一个对象，该对象有两个属性
-	var rectangle = {
-		width: 3,
-		height: 5
-	};
+```javascript
+// 使用源文本方式创建一个对象，该对象有两个属性
+var rectangle = {
+	width: 3,
+	height: 5
+};
+```
 
 用图形表示为：
 
@@ -45,18 +47,22 @@
 
 就像我们在[《对象的创建》](how-to-create-objects.md)中讲到的，上面rectangle对象是使用源文本方式创建的，这也是最直接简单的方法。那么使用源文本方式创建的对象有没有原型对象呢？让我们来看一下：
 
-	var emptyObj = {}; // An object with no properties
+```javascript
+var emptyObj = {}; // An object with no properties
 
-	Object.getPrototypeOf(emptyObj) === Object.prototype; // true
+Object.getPrototypeOf(emptyObj) === Object.prototype; // true
 
-	Object.getPrototypeOf(rectangle) === Object.prototype; // true
+Object.getPrototypeOf(rectangle) === Object.prototype; // true
+```
 
 从上面的例子可以看到，两个以源文本方式创建的对象emptyObj和rectangle的原型对象都是**Object.prototype**。
 
 实际上在JavaScript中，以源文本创建的对象，其默认就是以Object.prototype为原型对象，也可以说继承了Object.prototype。所以emptyObj和rectangle都可以使用Object.prototype对象的属性，比如：
 
-	emptyObj.toString();  // [object Object]
-	rectangle.toString();  // [object Object]
+```javascript
+emptyObj.toString();  // [object Object]
+rectangle.toString();  // [object Object]
+```
 
 在一般情况下，新创建的对象都直接或间接地继承了Object.prototype这个对象，也就继承了其属性。基于这个原因，我们说在JavaScript中很少有真正意义上的空对象。
 
@@ -117,33 +123,35 @@
 
 很多的文章就和这里的理解一样，认为\_\_proto\_\_属性就是指向当前对象的原型对象。让我们基于这种理解来做一个试验：
 
-	var objPoint = {x: 1, y: 2};  // 使用源文本方式创建一个新对象objPoint，自身带有两个属性
+```javascript
+var objPoint = {x: 1, y: 2};  // 使用源文本方式创建一个新对象objPoint，自身带有两个属性
 
-	console.log(objPoint); // { x: 1, y: 2}
+console.log(objPoint); // { x: 1, y: 2}
 
-	Object.getPrototypeOf(objPoint) === Object.prototype;  // true，对象objPoint的原型对象是Object.prototype
-	objPoint.__proto__ === Object.prototype;  // true，访问__proto__也得到objPoint的原型对象，看起来确实是指向原型对象
+Object.getPrototypeOf(objPoint) === Object.prototype;  // true，对象objPoint的原型对象是Object.prototype
+objPoint.__proto__ === Object.prototype;  // true，访问__proto__也得到objPoint的原型对象，看起来确实是指向原型对象
 
-	// 接下来，我们尝试通过__proto__属性来修改objPoint的原型对象
+// 接下来，我们尝试通过__proto__属性来修改objPoint的原型对象
 
-	objPoint.__proto__ = null;  // 把__proto__设为null，希望把objPoint改为没有原型对象，也就是不继承任何对象
-	
-	Object.getPrototypeOf(objPoint) === null; // true，成功，objPoint确实没有原型对象了
+objPoint.__proto__ = null;  // 把__proto__设为null，希望把objPoint改为没有原型对象，也就是不继承任何对象
 
-	objPoint.__proto__ === null;  // false，咦，objPoint不是已经没有原型对象了嘛？为什么objPoint的__proto__的值不是null，那是什么？
+Object.getPrototypeOf(objPoint) === null; // true，成功，objPoint确实没有原型对象了
 
-	objPoint.__proto__ === undefined; // true，__proto__不在对象objPoint中存在，怎么回事？
+objPoint.__proto__ === null;  // false，咦，objPoint不是已经没有原型对象了嘛？为什么objPoint的__proto__的值不是null，那是什么？
 
-	// 好像出了点问题，我想把objPoint再改回去，也就是从Object.prototype继承
+objPoint.__proto__ === undefined; // true，__proto__不在对象objPoint中存在，怎么回事？
 
-	objPoint.__proto__ = Object.prototype;  // 希望能通过__proto__属性，再链接到Object.prototype对象上
+// 好像出了点问题，我想把objPoint再改回去，也就是从Object.prototype继承
 
-	Object.getPrototypeOf(objPoint) === Object.prototype; // false，怎么回事？上面不是把__proto__指向Object.prototype了嘛？
+objPoint.__proto__ = Object.prototype;  // 希望能通过__proto__属性，再链接到Object.prototype对象上
 
-	// 我们来看看这时的objPoint变成什么样了
-	
-	console.log(objPoint); // { x: 1, y: 2, __proto__: {} }
-	
+Object.getPrototypeOf(objPoint) === Object.prototype; // false，怎么回事？上面不是把__proto__指向Object.prototype了嘛？
+
+// 我们来看看这时的objPoint变成什么样了
+
+console.log(objPoint); // { x: 1, y: 2, __proto__: {} }
+```
+
 为什么，上面的objPoint对象里面出现了一个\_\_proto\_\_属性了呢？为什么通过改变\_\_proto\_\_的值，无法改变原型对象了呢？
 
 ### \_\_proto\_\_真相
@@ -193,68 +201,72 @@
 
 在对象中，定义一个访问属性最简单的方法就是使用源文本方式，语法如下：
 
-	var o = {
-		// 普通的数据属性
-		dataProperty: value,
+```javascript
+var o = {
+	// 普通的数据属性
+	dataProperty: value,
 
-		// 可读写的访问属性，有getter和setter
-		get accessorProperty() { /* function body here */ },
-		set accessorProperty(value) { /* function body here */ }
-	};
+	// 可读写的访问属性，有getter和setter
+	get accessorProperty() { /* function body here */ },
+	set accessorProperty(value) { /* function body here */ }
+};
+```
 
 一个简单的例子：
 
-	// 创建一个带有访问属性的对象
-	var obj = {
-		// 两个普通的数据属性
-		x: 1,
-		y: 2,
+```javascript
+// 创建一个带有访问属性的对象
+var obj = {
+	// 两个普通的数据属性
+	x: 1,
+	y: 2,
 
-		// 一个只读的访问属性，返回属性x与属性y的乘积
-		get a1() { return (this.x * this.y); },
+	// 一个只读的访问属性，返回属性x与属性y的乘积
+	get a1() { return (this.x * this.y); },
 
-		// 一个可读写的访问属性，返回属性x与属性y的和
-		get a2() { return (this.x + this.y); },
-		set a2(point) {
-			this.x = point.x;
-			this.y = point.y;
-		}
-	};
+	// 一个可读写的访问属性，返回属性x与属性y的和
+	get a2() { return (this.x + this.y); },
+	set a2(point) {
+		this.x = point.x;
+		this.y = point.y;
+	}
+};
 
-	// 使用这些访问属性
-	console.log(obj.a1);  // 2
+// 使用这些访问属性
+console.log(obj.a1);  // 2
 
-	console.log(obj.a2);  // 3
+console.log(obj.a2);  // 3
 
-	obj.a2 = { x: 5, y: 11 };  // 使用setter方法修改obj的两个属性x和y
+obj.a2 = { x: 5, y: 11 };  // 使用setter方法修改obj的两个属性x和y
 
-	console.(obj); // { x: 5, y: 11, a1: [Getter], a2: [Getter/Setter] }
+console.(obj); // { x: 5, y: 11, a1: [Getter], a2: [Getter/Setter] }
 
-	console.log(obj.a1);  // 55
-	
+console.log(obj.a1);  // 55
+```
 
 为了简单起见，上面访问属性a2的setter方法中并没有对输入参数作检验，这里只是为了演示setter的用法。随便提一下，setter方法仅允许有一个参数。
 
 在我们前面的例子中，当我们想把没有原型对象的objPoint，尝试通过修改\_\_proto\_\_属性重新建立和Object.prototype的链接时，却发现\_\_proto\_\_成了objPoint对象的一个普通属性。我们下面通过代码解释这是为什么：
 
-	// 新创建的objPoint对象是继承于Object.prototype
-	// 下面将__proto__赋值为null，实际上是调用了__proto__的setter方法
-	// 该方法将objPoint对象的内部状态位[[prototype]]设置为null，由此objPoint就没有原型对象了
-	objPoint.__proto__ = null;
+```javascript
+// 新创建的objPoint对象是继承于Object.prototype
+// 下面将__proto__赋值为null，实际上是调用了__proto__的setter方法
+// 该方法将objPoint对象的内部状态位[[prototype]]设置为null，由此objPoint就没有原型对象了
+objPoint.__proto__ = null;
 
-	// objPoint不从Object.prototype继承属性，当然也就是没有了__proto__属性，所以是undefined
-	objPoint.__proto__ === undefnined;
+// objPoint不从Object.prototype继承属性，当然也就是没有了__proto__属性，所以是undefined
+objPoint.__proto__ === undefnined;
 
-	// 这个赋值操作实际上是在objPoint对象上新创建了一个普通的数据属性，名为__proto__
-	// 这并没有改变objPoint的内部状态位[[prototype]]，也就没有改变其原型对象
-	objPoint.__proto___ = Object.prototype;
+// 这个赋值操作实际上是在objPoint对象上新创建了一个普通的数据属性，名为__proto__
+// 这并没有改变objPoint的内部状态位[[prototype]]，也就没有改变其原型对象
+objPoint.__proto___ = Object.prototype;
 
-	// 所以，你将会在objPoint中看到__proto__这个属性，它仅仅只是一个普通属性而已，与x、y没什么区别
-	console.log(objPoint); // { x: 1, y: 2, __proto__: {} }
+// 所以，你将会在objPoint中看到__proto__这个属性，它仅仅只是一个普通属性而已，与x、y没什么区别
+console.log(objPoint); // { x: 1, y: 2, __proto__: {} }
 
-	// 而且，objPoint的原型对象仍然为null，即没有
-	Object.getPrototypeOf(objPoint) === null;
-
+// 而且，objPoint的原型对象仍然为null，即没有
+Object.getPrototypeOf(objPoint) === null;
+```
 
 ### \_\_proto\_\_小结
 

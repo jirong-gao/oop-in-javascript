@@ -17,16 +17,18 @@
 
 如果一个对象的某个属性的值为函数时，我们将这个函数称之为方法（method）。当函数作为对象的方法被调用时，this就指向对象本身。
 
-	var rect = {
-		height: 3,
-		width: 5,
+```javascript
+var rect = {
+	height: 3,
+	width: 5,
 
-		getArea: function() {
-			return this.height * this.width;
-	  	}
-	};
-	
-	console.log(rect.getArea());  // 15
+	getArea: function() {
+		return this.height * this.width;
+  	}
+};
+
+console.log(rect.getArea());  // 15
+```
 
 对象rect的属性getArea的值为一个函数，rect.getArea()就是将该函数作为对象的方法进行调用。
 
@@ -44,45 +46,50 @@
 这样的设计在平常使用函数时，不会有什么问题。但是，在面向对象的编程中，可能会带来问题。这个问题就是在对象的方法中，如果有内部函数，对this的使用极有可能发生意想不到的错误。
 
 比如，我们给前面的rect对象增加一个方法incr，用以将长和宽加1。为了解释这个情况，我们故意地使用了内部函数，如下：
-	
-	// 给上面的rect对象新增一个方法incr()
-	rect.incr = function() {
-		// Use inner function  purposely 
-		var foo = function() {
-			this.height++;  // 当该函数作为普通函数被调用时，this参数会被绑定到全局对象上
 
-			this.width++;
-		};
-	
-		foo();  // 以普通函数调用的方式来调用函数foo()
+```javascript
+// 给上面的rect对象新增一个方法incr()
+rect.incr = function() {
+	// Use inner function  purposely 
+	var foo = function() {
+		this.height++;  // 当该函数作为普通函数被调用时，this参数会被绑定到全局对象上
+
+		this.width++;
 	};
-	
-	rect.incr(); // Invoke incr as method
-	
-	console.log(rect.height);  // Still 3
-	console.log(rect.width);   // Still 5
+
+	foo();  // 以普通函数调用的方式来调用函数foo()
+};
+
+rect.incr(); // Invoke incr as method
+
+console.log(rect.height);  // Still 3
+console.log(rect.width);   // Still 5
+```
 
 我们的原意是希望通过incr()方法来增加这个矩形的长和宽，但是我们可以看到上面的代码并没有达到预期目的。问题就出在对“this”的使用上。
 
 内部函数foo在作为函数被调用时，foo函数里面的this被绑定到全局对象，而不是我们期望的rect对象本身。Douglas Crockford认为这是JavaScript设计上的一个错误。
 
 为了避免这个问题，我们可以避免使用this变量，而另外定义一个变量，将这个变量命名为self：
-	rect.incr = function() {
-		var self = this;  // Assign the value of this to variable self
-	 
-		// Use inner function  purposely 
-		var foo = function() {
-			self.height++;  
-			self.width++;				
-		};
-	
-		foo();  // Invoke foo as a normal function
+
+```javascript
+rect.incr = function() {
+	var self = this;  // Assign the value of this to variable self
+ 
+	// Use inner function  purposely 
+	var foo = function() {
+		self.height++;  
+		self.width++;				
 	};
-	
-	rect.incr(); // Invoke incr as method
-	
-	console.log(rect.height);  // 4
-	console.log(rect.width);   // 6
+
+	foo();  // Invoke foo as a normal function
+};
+
+rect.incr(); // Invoke incr as method
+
+console.log(rect.height);  // 4
+console.log(rect.width);   // 6
+```
 
 在incr()方法的开头，新定义一个变量self，然后将this的值赋给self。在上面讲过，当函数作为对象的方法被调用时，this就会被绑定到对象本身，也就是对rect对象本身的引用。那么变量self也就是对rect对象本身的一个引用，而且该变量不会被在内部函数中有歧义（只要不是故意地在内部函数中定义新的同名变量）。
 

@@ -29,14 +29,16 @@ JavaScript定义了两种类型，一种是基本类型（primitive type），�
 
 注意，这个概念非常重要，JavaScript的面向对象实现就是基于这个“键值对”的数据结构。理解、记住它，JavaScript中面向对象的很多疑点、难点就会迎刃而解。
 
-    var book = {
-    	title: 'JavaScript之面向对象编程',
-    	language: '中文'
-    };
+```javascript
+var book = {
+	title: 'JavaScript之面向对象编程',
+	language: '中文'
+};
 
-	console.log(book.title); // 'JavaScript之面向对象编程'
-	console.log(book.language); // '中文'
-    
+console.log(book.title); // 'JavaScript之面向对象编程'
+console.log(book.language); // '中文'
+```
+
 上面代码定义了一个包含两个键值对的object类型的值。在JavaScript中，将每个“键值对”称为一个“属性”（property），每个属性都具有属性名和属性值。
 
 这里的book有两个属性，其中名为“title”的属性的值为“JavaScript之面向对象编程”。通常，我们称之为“属性title的值是xxxxx”。
@@ -48,14 +50,16 @@ JavaScript定义了两种类型，一种是基本类型（primitive type），�
 
 属性的值可以是基本类型的值，也可以是复合类型的值（即另外一个object类型，类似于嵌套结构），当然也就可以是数组和函数。对了，**函数可以作为值，而且在JavaScript函数是一个真正意义上的值**。你可以把它想像成类似一个数字或者字符串，可以把一个函数赋值给一个变量，或者在函数的调用中返回一个函数。
 
-    // 定义一个变量foo，并将一个函数赋值给该变量
-	var foo = function() {
-    	console.log("This function is being invoked!");
-    };
+```javascript
+// 定义一个变量foo，并将一个函数赋值给该变量
+var foo = function() {
+	console.log("This function is being invoked!");
+};
 
-	typeof foo;  // function
-    
-    foo(); // 通过在变量名foo后添加小括号运算符“（）”，来调用foo所指向的函数
+typeof foo;  // function
+
+foo(); // 通过在变量名foo后添加小括号运算符“（）”，来调用foo所指向的函数
+```
 
 让我们来看看面向对象的概念。
 
@@ -73,46 +77,54 @@ OOP中的对象概念与真实世界中的对象类似，每个对象都包含�
 
 在JavaScript语言中，就是基于object类型来实现的OOP里面的对象。属性很好理解，比如下面这个例子：
 
-	var rectangle = {
-		width: 3,
-		height: 5
-	};
+```javascript
+var rectangle = {
+	width: 3,
+	height: 5
+};
+```
 
 rectangle是一个具有两个属性的object，分别为width和height（英文中的矩形讲宽和高，中文中是长和宽），这还只是一个数据结构。如果我们以面向对象的角度来思考问题，将其看作一个矩形对象，具有width和height属性，而且在需要时能够返回面积。那么：
 
-	var rectangle = {
-		width: 3,
-		height: 5,
-		getArea: function() {
-			return this.width * this.height;
-		}
-	};
+```javascript
+var rectangle = {
+	width: 3,
+	height: 5,
+	getArea: function() {
+		return this.width * this.height;
+	}
+};
 
-	// 获得rect的面积值
-	console.log(rectangle.getArea()); // 15
+// 获得rect的面积值
+console.log(rectangle.getArea()); // 15
+```
 
 注意到getArea了嘛？这仍然是rectangle的一个属性，只不过这个属性的值是一个函数，可以被调用执行。在JavaScript的面向对象编程语境下，将这样的属性称为方法。这样object类型就非常好地实现了OOP中对象的核心概念。
 
 此时，通常也就将rectangle称为rect对象，完成了从object类型到对象的演变。从代码上来看，并没有什么变化，变化的是你的思考问题的方式。比如说在面向过程的思考方式下，我们就会如下来使用rect：
 
-	// 声明一个函数用来计算矩形的面积
-	function getArea(rect) {
-		return rect.width * rect.height;
-	}
+```javascript
+// 声明一个函数用来计算矩形的面积
+function getArea(rect) {
+	return rect.width * rect.height;
+}
 
-	var area = getArea(rectangle);
+var area = getArea(rectangle);
 
-	console.log(area);	// 15
+console.log(area);	// 15
+```
 
 这体现的就是OOP的封装思想。
 
 这里要注意的是，由于getArea是rectangle的一个属性，它的值是可以变化的，比如我们将其改为一个字符串：
 
-	rectangle.getArea = 'It\'s a string now, not a function any more!';
+```javascript
+rectangle.getArea = 'It\'s a string now, not a function any more!';
 
-	console.log(rectangle.getArea); // It's a string now, not a function any more!
+console.log(rectangle.getArea); // It's a string now, not a function any more!
 
-	rectanlge.getArea(); // TypeError: rectangle.getArea is not a function
+rectanlge.getArea(); // TypeError: rectangle.getArea is not a function
+```
 
 此时，getArea仍然是一个属性，不过其值已经变为一个字符串了，这时它也不能叫作方法了。这和C++、Java大不一样，这也体现了JavaScript作为动态语言的特点。
 

@@ -11,21 +11,23 @@
 
 比如下面的Rectangle这个构造函数：
 
-	var Rectangle = function(width, height) {
-		this.width = width;
-		this.height = height;
-	};
+```javascript
+var Rectangle = function(width, height) {
+	this.width = width;
+	this.height = height;
+};
 
-	// 在 Rectangle.prototype 对象中添加一个属性“getArea”，该属性的值为一个函数
-	Rectangle.prototype.getArea = function() {
-		return this.width * this.height;
-	};
-	
-	// 生成一个rect对象
-	// 该rect对象拥有两个属性（width和height）和一个方法（getArea）
-	var rect = new Rectangle(5, 7);
+// 在 Rectangle.prototype 对象中添加一个属性“getArea”，该属性的值为一个函数
+Rectangle.prototype.getArea = function() {
+	return this.width * this.height;
+};
 
-	console.log(rect.getArea());  // 35
+// 生成一个rect对象
+// 该rect对象拥有两个属性（width和height）和一个方法（getArea）
+var rect = new Rectangle(5, 7);
+
+console.log(rect.getArea());  // 35
+```
 
 从以上代码上看，这个Rectangle非常像一个类，而rect对象是Rectangle类的一个实例。这也是为什么使用构造函数的这种方式被Douglas Crockford称为“伪类模式”（pseudoclassical pattern）的原因。
 
@@ -33,19 +35,21 @@
 
 当new这个关键字出现在函数调用的前面时，实际上是在告诉JavaScript引擎这是一个构造函数的调用。而JavaScript引擎就会隐含地对被调用函数进行一些修改，比如Rectangle()函数在运行时将会被修改为：
 
-	var Rectangle = function(width, height) {
-	  // Create a new object with hidden link to Rectangle.prototype
-	  // var obj = Object.create(Rectangle.prototype);
-	
-	  // Set “this” variable to the newly created object
-	  // this = obj;
-	
-	  // Execute original code
-	  this.width = width;
-	  this.height = height;
-	
-	  // return this;
-	};
+```javascript
+var Rectangle = function(width, height) {
+  // Create a new object with hidden link to Rectangle.prototype
+  // var obj = Object.create(Rectangle.prototype);
+
+  // Set “this” variable to the newly created object
+  // this = obj;
+
+  // Execute original code
+  this.width = width;
+  this.height = height;
+
+  // return this;
+};
+```
 
 正如上面的注释，当加上new以后，就如同给函数加入了一些步骤，从而变成：
 
