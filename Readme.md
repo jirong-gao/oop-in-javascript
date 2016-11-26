@@ -4,6 +4,7 @@ JavaScript语言上手非常容易，本身也不需要什么庞大复杂的开�
 
 但是，一旦想在JavaScript中使用面向对象编程，就会发现其中的一些实现非常绕，理解起来也很烧脑。本系列侧重于呈现JavaScript中面向对象编程的实现，希望能够从概念上对JavaScript面向对象编程有正确的理解，从而达到消除各种误解的目的。
 
+如果你喜欢这个系列，请点上一赞（star）！
 
 - [JavaScript简史](book/javascript-history.md)
 - [对象与object](book/object-and-object.md)
